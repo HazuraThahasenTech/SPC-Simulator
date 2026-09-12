@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SPC Data Simulator</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+
+        <div>
+            <h1>SPC Data Simulator</h1>
+
+            <p>
+                Independent Process Data Generation Application
+            </p>
+        </div>
+
+        <div class="online">
+            ● Simulator Online
+        </div>
+
+    </header>
+
+
+    <!-- MODE -->
+
+    <section class="mode-card">
+
+        <h2>Simulation Mode</h2>
+
+        <div class="mode-buttons">
+
+            <button
+                id="automatic-mode-button"
+                class="mode-button active"
+            >
+                Automatic Simulation
+            </button>
+
+            <button
+                id="manual-mode-button"
+                class="mode-button"
+            >
+                Manual Data Stream
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         AUTOMATIC MODE
+    =================================================== -->
+
+    <div id="automatic-section">
+
+        <div class="grid">
+
+            <section class="card">
+
+                <h2>Process Configuration</h2>
+
+                <p class="description">
+                    Configure automatically generated process data.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label>Process Name</label>
+
+                    <input
+                        id="process-name"
+                        type="text"
+                        value="Generic Manufacturing Process"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Data Type</label>
+
+                    <select id="data-type">
+
+                        <option value="variable">
+                            Variable Data
+                        </option>
+
+                        <option value="attribute">
+                            Attribute Data
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div id="variable-settings">
+
+                    <div class="two-column">
+
+                        <div class="form-group">
+
+                            <label>Process Mean</label>
+
+                            <input
+                                id="mean"
+                                type="number"
+                                step="0.01"
+                                value="500"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Standard Deviation</label>
+
+                            <input
+                                id="standard-deviation"
+                                type="number"
+                                step="0.01"
+                                min="0.001"
+                                value="0.15"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="attribute-settings"
+                    class="hidden"
+                >
+
+                    <div class="two-column">
+
+                        <div class="form-group">
+
+                            <label>Defect Rate</label>
+
+                            <input
+                                id="defect-rate"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="1"
+                                value="0.04"
+                            >
+
+                            <small>
+                                Example: 0.04 = 4%
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Sample Size</label>
+
+                            <input
+                                id="sample-size"
+                                type="number"
+                                min="1"
+                                value="100"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="abnormal-panel">
+
+                    <div>
+
+                        <strong>
+                            Abnormal Data Mode
+                        </strong>
+
+                        <p>
+                            Generate unusual values for
+                            alarm testing.
+                        </p>
+
+                    </div>
+
+                    <input
+                        id="abnormal-mode"
+                        type="checkbox"
+                    >
+
+                </div>
+
+
+                <button
+                    id="save-button"
+                    class="button primary full"
+                >
+                    Save Configuration
+                </button>
+
+                <p id="save-message"></p>
+
+            </section>
+
+
+            <section class="card">
+
+                <div class="title-row">
+
+                    <div>
+
+                        <h2>Automatic Data Generator</h2>
+
+                        <p class="description">
+                            Generate observations continuously.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="simulation-badge"
+                        class="badge stopped"
+                    >
+                        STOPPED
+                    </span>
+
+                </div>
+
+
+                <div class="value-box">
+
+                    <span>CURRENT VALUE</span>
+
+                    <strong id="current-value">
+                        --
+                    </strong>
+
+                    <p id="value-details">
+                        Waiting for simulation
+                    </p>
+
+                </div>
+
+
+                <div class="button-row">
+
+                    <button
+                        id="generate-button"
+                        class="button secondary"
+                    >
+                        Generate Once
+                    </button>
+
+
+                    <button
+                        id="start-button"
+                        class="button success"
+                    >
+                        Start Simulation
+                    </button>
+
+
+                    <button
+                        id="stop-button"
+                        class="button danger"
+                        disabled
+                    >
+                        Stop
+                    </button>
+
+                </div>
+
+
+                <div class="stats">
+
+                    <div>
+
+                        <span>Generated</span>
+
+                        <strong id="generated-count">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Data Type</span>
+
+                        <strong id="display-data-type">
+                            Variable
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Condition</span>
+
+                        <strong id="condition">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         MANUAL MODE
+    =================================================== -->
+
+    <div
+        id="manual-section"
+        class="hidden"
+    >
+
+        <div class="grid">
+
+
+            <section class="card">
+
+                <h2>Manual Data Stream</h2>
+
+                <p class="description">
+                    Submit observations one by one.
+                    Every submitted observation is stored
+                    in sequence for SPC analysis.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label>Process Name</label>
+
+                    <input
+                        id="manual-process-name"
+                        type="text"
+                        value="Generic Manufacturing Process"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Data Type</label>
+
+                    <select id="manual-data-type">
+
+                        <option value="variable">
+                            Variable Measurement
+                        </option>
+
+                        <option value="attribute">
+                            Attribute / Defective Count
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- VARIABLE -->
+
+                <div id="manual-variable">
+
+                    <div class="form-group">
+
+                        <label>
+                            Next Measurement
+                        </label>
+
+                        <input
+                            id="manual-value"
+                            type="number"
+                            step="any"
+                            placeholder="Example: 500.25"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ATTRIBUTE -->
+
+                <div
+                    id="manual-attribute"
+                    class="hidden"
+                >
+
+                    <div class="two-column">
+
+                        <div class="form-group">
+
+                            <label>
+                                Defective Count
+                            </label>
+
+                            <input
+                                id="manual-defect-count"
+                                type="number"
+                                min="0"
+                                placeholder="Example: 5"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Sample Size
+                            </label>
+
+                            <input
+                                id="manual-sample-size"
+                                type="number"
+                                min="1"
+                                value="100"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="send-manual-button"
+                    class="button primary full"
+                >
+                    Add Next Observation
+                </button>
+
+
+                <p id="manual-message"></p>
+
+
+                <button
+                    id="clear-manual-button"
+                    class="button danger full"
+                >
+                    Clear Manual Data
+                </button>
+
+            </section>
+
+
+            <section class="card">
+
+                <h2>Manual Stream Status</h2>
+
+                <p class="description">
+                    Each submitted value becomes the next
+                    observation in the process stream.
+                </p>
+
+
+                <div class="value-box">
+
+                    <span>
+                        LATEST MANUAL VALUE
+                    </span>
+
+                    <strong id="manual-current-value">
+                        --
+                    </strong>
+
+                    <p id="manual-details">
+                        No manual observations submitted
+                    </p>
+
+                </div>
+
+
+                <div class="stats">
+
+                    <div>
+
+                        <span>
+                            Manual Observations
+                        </span>
+
+                        <strong id="manual-count">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Type
+                        </span>
+
+                        <strong id="manual-type-display">
+                            Variable
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Stream
+                        </span>
+
+                        <strong>
+                            Ready
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- MANUAL HISTORY -->
+
+        <section class="card history-card">
+
+            <h2>Manual Observation Sequence</h2>
+
+            <p class="description">
+                These observations will later be consumed
+                by the SPC Monitoring System in this order.
+            </p>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Observation</th>
+
+                        <th>Process</th>
+
+                        <th>Type</th>
+
+                        <th>Value / Defects</th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="manual-table">
+
+                        <tr id="manual-empty-row">
+
+                            <td colspan="4">
+                                No manual observations submitted.
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ==================================================
+         ALL SIMULATOR DATA
+    =================================================== -->
+
+    <section class="card history-card">
+
+        <h2>Recent Simulator Data</h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Source</th>
+
+                    <th>Process</th>
+
+                    <th>Type</th>
+
+                    <th>Value / Defects</th>
+
+                    <th>Condition</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody id="data-table">
+
+                    <tr id="empty-row">
+
+                        <td colspan="6">
+                            No data generated yet.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- API -->
+
+    <section class="api-card">
+
+        <h2>Simulator API</h2>
+
+        <p>
+            The SPC Monitoring System can retrieve
+            observations from this simulator in sequence.
+        </p>
+
+
+        <div class="endpoint">
+
+            <strong>Data Stream</strong>
+
+            <code>
+                http://127.0.0.1:5001/api/data
+            </code>
+
+        </div>
+
+
+        <div class="endpoint">
+
+            <strong>Manual Stream</strong>
+
+            <code>
+                http://127.0.0.1:5001/api/manual-data
+            </code>
+
+        </div>
+
+
+        <div class="endpoint">
+
+            <strong>Status</strong>
+
+            <code>
+                http://127.0.0.1:5001/api/status
+            </code>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='js/simulator.js') }}"
+></script>
+
+</body>
+
+</html>
